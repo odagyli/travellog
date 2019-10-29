@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My document</title>
+</head>
+
+<body>
+    <input type="text" id="inpDescr" placeholder="Description">
+    <input type="number" id="inpAmount" placeholder="Amount in NOK">
+    <br><br>
+    <button id="btnCreate">Create expense voucher</button>
+    <h3 id="txtResult">Result...</h3>
+</body>
+
+<script>
+
+    // ---------------------------------------  
+    
+    
+    let inpAmount = document.getElementById('inpAmount'); 
+    let inpDescr = document.getElementById('inpDescr');
+    let btnCreate = document.getElementById('btnCreate');
+    let txtResult = document.getElementById('txtResult');
+
+    let tryID = sessionStorage.getItem("travelid");
+
+
+    btnCreate.addEventListener('click', async function(evt) {
+
+        let url = "http://localhost:3000/expenses";
+
+        let updata = {
+            descr: inpDescr.value,
+            amount: inpAmount.value,
+            travelid: tryID
+        }
+
+        let cfg = {
+            method: "POST",
+            headers: {"Content-type":"application/json"},
+            body: JSON.stringify(updata)
+        }
+
+        try {
+            var resp = await fetch(url, cfg);
+            var data = await resp.json();
+            txtResult.innerHTML = data.msg + " for " + inpDescr.value;
+        }
+        catch (err){
+            console.log(err);
+        }
+    });
+    
+//------------------------------------------------------
+async function deleteExpense(id) {
+
+    let updata = { expenseID: id };
+    let cfg = {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updata)
+    }
+
+    try {
+        await fetch(url, cfg);
+        listExpenses();
+    }
+    catch (err) {
+        console.log(err);
+    }
+}
+
+
+</script>
+
+</html>

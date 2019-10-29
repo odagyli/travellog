@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My document</title>
+</head>
+
+<body>
+
+    <div id="container"></div>
+
+</body>
+
+<script>
+
+    let container = document.getElementById('container');
+    let url = "http://localhost:3000/travels";
+
+    // ---------------------------------------    
+    async function sendRequest() {
+
+
+
+        try {
+            var resp = await fetch(url);
+            var data = await resp.json();
+
+            container.innerHTML = "";
+
+            for (let value of data) {
+
+                let div = document.createElement("div");
+                let html = `
+                    <h3> ${value.destination} </h3> 
+                    <p> ${value.date}, distance: ${value.km} km </p> 
+                    <hr>
+                    
+            `;
+            div.innerHTML = html;
+
+            let delBtn =document.createElement("button");
+            delBtn.innerHTML="Delete";
+            delBtn.addEventListener('click', function (evt){
+                deleteTravel(value.id);
+            });
+            
+            let addExpsBtn = documentc.createElement("button");
+            addExpsBtn.innerHTML = "Add expenses";
+            addExpsBtn.addEventListener('click', function (evt) {
+                sessionStorage.setItem("travelid", value.id);
+                location.href = "expensecreate.html";
+            });
+
+            div.insertBefore(delBtn, div.lastElementChild);
+            container.appendChild(div);
+            }
+        }
+
+        catch (err) {
+            console.log(err);
+        }
+    }
+sendRequest();
+
+//--------------------------
+async function deleteTravel(id) {
+
+    let updata = {travelID:id};
+
+
+    let cfg = {
+        method: "DELETE",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(updata)
+    }
+
+    try {
+        await fetch(url, cfg);
+        sendRequest();
+    
+    }
+    catch(err) {
+        console.log(err);
+    }
+}
+
+   
+
+</script>
+
+</html>
