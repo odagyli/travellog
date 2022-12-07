@@ -11,7 +11,7 @@
   "dependencies": {
     "core-util-is": "^1.0.2",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "pg": "^7.12.1",
     "webpack-dev-server": "^3.9.0"
   },
